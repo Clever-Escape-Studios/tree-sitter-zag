@@ -6,9 +6,12 @@
       "camelcase": "Zag",
       "title": "Zag",
       "scope": "source.zag",
+      "path": ".",
       "file-types": ["zag"],
       "injection-regex": "^zag$",
-      "class-name": "TreeSitterZag"
+      "class-name": "TreeSitterZag",
+      "highlights": "queries/highlights.scm",
+      "tags": "queries/tags.scm"
     }
   ],
   "metadata": {

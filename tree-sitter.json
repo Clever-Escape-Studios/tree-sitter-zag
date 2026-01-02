@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "zag",
+      "camelcase": "Zag",
+      "title": "Zag",
+      "scope": "source.zag",
+      "file-types": ["zag"],
+      "injection-regex": "^zag$",
+      "class-name": "TreeSitterZag"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "Zar Language SUpport",
+    "authors": [
+      {
+        "name": "Jose Joya",
+        "email": "ing.jose.joya@gmail.com",
+        "url": "https://github.com/seobryn"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/Clever-Escape-Studios/tree-sitter-zag.git",
+      "funding": ""
+    }
+  },
+  "bindings": {
+    "c": false,
+    "go": false,
+    "java": false,
+    "node": true,
+    "python": false,
+    "rust": true,
+    "swift": false,
+    "zig": false
+  }
+}

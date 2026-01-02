@@ -1,0 +1,79 @@
+// Test file for interface and struct declarations
+
+// Simple interface declaration
+interface Reader {
+    Read(p []byte) (n int, err error)
+}
+
+// Interface with multiple methods
+interface Writer {
+    Write(p []byte) (n int, err error)
+    Close() error
+}
+
+// Interface with generic type parameters
+interface Comparable<T> {
+    CompareTo(other T) int
+}
+
+// Empty interface
+interface Any {}
+
+// Simple struct declaration
+struct Person {
+    name string
+    age int
+}
+
+// Struct with multiple fields
+struct Point {
+    x float64
+    y float64
+    z float64
+}
+
+// Struct with generic type parameters
+struct Container<T> {
+    value T
+    next *Container<T>
+}
+
+// Struct with embedded fields
+struct Employee {
+    Person
+    id int
+    department string
+}
+
+// Empty struct
+struct Empty {}
+
+// Struct with tags
+struct User {
+    ID int `json:"id"`
+    Name string `json:"name"`
+    Email string `json:"email,omitempty"`
+}
+
+// Multiple struct declarations
+struct Config {
+    host string
+    port int
+}
+
+struct Database {
+    config Config
+    connected bool
+}
+
+// Interface with embedded interface
+interface ReadWriter {
+    Reader
+    Writer
+}
+
+// Generic interface with constraint
+interface Ordered<T> {
+    Less(other T) bool
+    Greater(other T) bool
+}

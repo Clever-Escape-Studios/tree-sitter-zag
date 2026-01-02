@@ -1,0 +1,127 @@
+// Ejemplo de código Zag para probar el syntax highlighting
+package main
+
+import (
+	"fmt"
+	"strings"
+)
+
+// Constantes
+const (
+	MaxSize = 100
+	Pi      = 3.14159
+	Title   = "Hello, Zag!"
+)
+
+// Variables
+var (
+	counter int = 0
+	enabled bool = true
+	items   []string
+)
+
+// Tipo personalizado
+struct Person {
+	name    string
+	age     int
+	email   string
+}
+
+// Método para Person
+func (p *Person) GetInfo() string {
+	return fmt.Sprintf("Name: %s, Age: %d", p.name, p.age)
+}
+
+// Función con múltiples parámetros y retorno
+func add(a int, b int) int {
+	return a + b
+}
+
+// Función con closure
+func makeCounter() func() int {
+	count := 0
+	return func() int {
+		count++
+		return count
+	}
+}
+
+// Función principal
+func main() {
+	// Declaraciones cortas
+	x := 10
+	y := 20
+	result := add(x, y)
+
+	// Condicionales
+	if result > 25 {
+		fmt.Println("Result is greater than 25")
+	} else {
+		fmt.Println("Result is 25 or less")
+	}
+
+	// Switch
+	switch result {
+	case 10:
+		fmt.Println("Ten")
+	case 20:
+		fmt.Println("Twenty")
+	case 30:
+		fmt.Println("Thirty")
+	default:
+		fmt.Println("Other")
+	}
+
+	// For loops
+	for i := 0; i < 5; i++ {
+		fmt.Println(i)
+	}
+
+	// Range
+	numbers := []int{1, 2, 3, 4, 5}
+	for idx, val := range numbers {
+		fmt.Printf("Index: %d, Value: %d\n", idx, val)
+	}
+
+	// Maps
+	m := make(map[string]int)
+	m["one"] = 1
+	m["two"] = 2
+
+	// Channels
+	ch := make(chan int, 10)
+	go func() {
+		ch <- 42
+	}()
+
+	value := <-ch
+	fmt.Println(value)
+
+	// Struct literal
+	person := Person{
+		name:  "Alice",
+		age:   30,
+		email: "alice@example.com",
+	}
+
+	fmt.Println(person.GetInfo())
+
+	// Defer
+	defer fmt.Println("This runs last")
+
+	// Error handling
+	if err := doSomething(); err != nil {
+		panic(err)
+	}
+
+	// Type assertion
+	var i interface{} = "hello"
+	s, ok := i.(string)
+	if ok {
+		fmt.Println(strings.ToUpper(s))
+	}
+}
+
+func doSomething() error {
+	return nil
+}

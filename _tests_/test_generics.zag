@@ -1,0 +1,10 @@
+package main
+
+func id<T>(x T) T {
+    return x
+}
+
+func main() {
+    a := id<int32>(10)
+    ch := make<chan int32>(10)
+}

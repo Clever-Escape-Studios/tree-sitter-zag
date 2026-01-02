@@ -1,0 +1,26 @@
+// Test file to verify old syntax with 'type' keyword is no longer valid
+
+// This should NOT work anymore (old syntax)
+type Person struct {
+    name string
+    age int
+}
+
+// This should NOT work anymore (old syntax)
+type Reader interface {
+    Read(p []byte) (n int, err error)
+}
+
+// This should NOT work anymore (old syntax)
+type Container<T> struct {
+    value T
+}
+
+// This should NOT work anymore (old syntax)
+type Comparable<T> interface {
+    CompareTo(other T) int
+}
+
+// Type aliases should still work
+type MyInt = int
+type StringList = []string

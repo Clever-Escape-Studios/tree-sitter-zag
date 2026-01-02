@@ -92,7 +92,7 @@ const imaginaryLiteral = seq(
   "i",
 );
 
-module.exports = grammar({
+export default grammar({
   name: "zag",
 
   extras: ($) => [$.comment, /\s/],
@@ -115,14 +115,7 @@ module.exports = grammar({
     [$.qualified_type, $._expression],
     [$.generic_type, $._simple_type],
     [$.parameter_declaration, $._simple_type],
-    [$.type_parameter_declaration, $._simple_type, $._expression],
-    [$.type_parameter_declaration, $._expression],
-    [
-      $.type_parameter_declaration,
-      $._simple_type,
-      $.generic_type,
-      $._expression,
-    ],
+    [$.call_expression, $.binary_expression],
   ],
 
   reserved: {
@@ -180,6 +173,8 @@ module.exports = grammar({
         $.function_declaration,
         $.method_declaration,
         $.import_declaration,
+        $.interface_declaration,
+        $.struct_declaration,
       ),
 
     package_clause: ($) => seq("package", $._package_identifier),
@@ -281,14 +276,34 @@ module.exports = grammar({
         ),
       ),
 
-    type_parameter_list: ($) =>
-      seq("[", commaSep1($.type_parameter_declaration), optional(","), "]"),
-
-    type_parameter_declaration: ($) =>
+    interface_declaration: ($) =>
       seq(
-        commaSep1(field("name", $.identifier)),
-        field("type", alias($.type_elem, $.type_constraint)),
+        "interface",
+        field("name", $._type_identifier),
+        field("type_parameters", optional($.type_parameter_list)),
+        "{",
+        optional(
+          seq(
+            $._interface_elem,
+            repeat(seq(terminator, $._interface_elem)),
+            optional(terminator),
+          ),
+        ),
+        "}",
       ),
+
+    struct_declaration: ($) =>
+      seq(
+        "struct",
+        field("name", $._type_identifier),
+        field("type_parameters", optional($.type_parameter_list)),
+        $.field_declaration_list,
+      ),
+
+    type_parameter_list: ($) =>
+      seq("<", commaSep1($.type_parameter_declaration), optional(","), ">"),
+
+    type_parameter_declaration: ($) => field("name", $.identifier),
 
     parameter_list: ($) =>
       seq(
@@ -365,7 +380,7 @@ module.exports = grammar({
 
     generic_type: ($) =>
       prec.dynamic(
-        1,
+        10,
         seq(
           field(
             "type",
@@ -376,7 +391,7 @@ module.exports = grammar({
       ),
 
     type_arguments: ($) =>
-      prec.dynamic(2, seq("[", commaSep1($.type_elem), optional(","), "]")),
+      prec.dynamic(10, seq("<", commaSep1($.type_elem), optional(","), ">")),
 
     pointer_type: ($) => prec(PREC.unary, seq("*", $._type)),
 
@@ -709,13 +724,16 @@ module.exports = grammar({
     parenthesized_expression: ($) => seq("(", $._expression, ")"),
 
     call_expression: ($) =>
-      prec(
-        PREC.primary,
-        choice(
+      choice(
+        prec(
+          PREC.primary,
           seq(
             field("function", alias(choice("new", "make"), $.identifier)),
             field("arguments", alias($.special_argument_list, $.argument_list)),
           ),
+        ),
+        prec.dynamic(
+          3,
           seq(
             field("function", $._expression),
             field("type_arguments", optional($.type_arguments)),
@@ -823,10 +841,10 @@ module.exports = grammar({
         -1,
         seq(
           field("type", $._type),
-          "[",
+          "<",
           commaSep1($._type),
           optional(","),
-          "]",
+          ">",
         ),
       ),
 

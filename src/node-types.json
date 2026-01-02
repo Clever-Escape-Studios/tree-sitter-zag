@@ -226,10 +226,6 @@
         "named": true
       },
       {
-        "type": "zag_statement",
-        "named": true
-      },
-      {
         "type": "if_statement",
         "named": true
       },
@@ -255,6 +251,10 @@
       },
       {
         "type": "var_declaration",
+        "named": true
+      },
+      {
+        "type": "zag_statement",
         "named": true
       }
     ]
@@ -1204,21 +1204,6 @@
     }
   },
   {
-    "type": "zag_statement",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "_expression",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "if_statement",
     "named": true,
     "fields": {
@@ -1395,6 +1380,46 @@
           }
         ]
       }
+    }
+  },
+  {
+    "type": "interface_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
+      "type_parameters": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_parameter_list",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "method_elem",
+          "named": true
+        },
+        {
+          "type": "type_elem",
+          "named": true
+        }
+      ]
     }
   },
   {
@@ -2060,11 +2085,19 @@
           "named": true
         },
         {
+          "type": "interface_declaration",
+          "named": true
+        },
+        {
           "type": "method_declaration",
           "named": true
         },
         {
           "type": "package_clause",
+          "named": true
+        },
+        {
+          "type": "struct_declaration",
           "named": true
         }
       ]
@@ -2080,6 +2113,42 @@
       "types": [
         {
           "type": "_statement",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "struct_declaration",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "type_identifier",
+            "named": true
+          }
+        ]
+      },
+      "type_parameters": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "type_parameter_list",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "field_declaration_list",
           "named": true
         }
       ]
@@ -2208,21 +2277,6 @@
     }
   },
   {
-    "type": "type_constraint",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "_type",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
     "type": "type_conversion_expression",
     "named": true,
     "fields": {
@@ -2313,21 +2367,11 @@
     "named": true,
     "fields": {
       "name": {
-        "multiple": true,
-        "required": true,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
-      "type": {
         "multiple": false,
         "required": true,
         "types": [
           {
-            "type": "type_constraint",
+            "type": "identifier",
             "named": true
           }
         ]
@@ -2597,6 +2641,21 @@
     }
   },
   {
+    "type": "zag_statement",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "_expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "\u0000",
     "named": false
   },
@@ -2846,10 +2905,6 @@
     "named": false
   },
   {
-    "type": "zag",
-    "named": false
-  },
-  {
     "type": "identifier",
     "named": true
   },
@@ -2943,6 +2998,10 @@
   },
   {
     "type": "var",
+    "named": false
+  },
+  {
+    "type": "zag",
     "named": false
   },
   {

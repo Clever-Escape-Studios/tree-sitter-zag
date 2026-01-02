@@ -127,7 +127,6 @@ module.exports = grammar({
 
   reserved: {
     global: ($) => [
-      // https://go.dev/ref/spec#Keywords
       "break",
       "default",
       "func",
@@ -135,12 +134,11 @@ module.exports = grammar({
       "select",
       "case",
       "defer",
-      "go",
+      "zag",
       "map",
       "struct",
       "chan",
       "else",
-      "goto",
       "package",
       "switch",
       "const",
@@ -169,8 +167,6 @@ module.exports = grammar({
       seq(
         repeat(
           choice(
-            // Unlike a Go compiler, we accept statements at top-level to enable
-            // parsing of partial code snippets in documentation (see #63).
             seq($._statement, terminator),
             seq($._top_level_declaration, terminator),
           ),
@@ -504,7 +500,7 @@ module.exports = grammar({
         $._declaration,
         $._simple_statement,
         $.return_statement,
-        $.go_statement,
+        $.zag_statement,
         $.defer_statement,
         $.if_statement,
         $.for_statement,
@@ -515,7 +511,6 @@ module.exports = grammar({
         $.fallthrough_statement,
         $.break_statement,
         $.continue_statement,
-        $.goto_statement,
         $.block,
         $.empty_statement,
       ),
@@ -580,11 +575,9 @@ module.exports = grammar({
     continue_statement: ($) =>
       seq("continue", optional(alias($.identifier, $.label_name))),
 
-    goto_statement: ($) => seq("goto", alias($.identifier, $.label_name)),
-
     return_statement: ($) => seq("return", optional($.expression_list)),
 
-    go_statement: ($) => seq("go", $._expression),
+    zag_statement: ($) => seq("zag", $._expression),
 
     defer_statement: ($) => seq("defer", $._expression),
 

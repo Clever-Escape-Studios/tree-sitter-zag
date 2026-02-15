@@ -50,11 +50,49 @@ pub const TAGS_QUERY: &str = include_str!("../../queries/tags.scm");
 
 #[cfg(test)]
 mod tests {
+    fn parse_without_errors(code: &str) {
+        let mut parser = tree_sitter::Parser::new();
+        parser
+            .set_language(&super::LANGUAGE.into())
+            .expect("Error loading Zag parser");
+        let tree = parser.parse(code, None).expect("parser should return a tree");
+        assert!(
+            !tree.root_node().has_error(),
+            "unexpected parse errors in:\n{code}"
+        );
+    }
+
     #[test]
     fn test_can_load_grammar() {
         let mut parser = tree_sitter::Parser::new();
         parser
             .set_language(&super::LANGUAGE.into())
             .expect("Error loading Zag parser");
+    }
+
+    #[test]
+    fn test_new_zag_constructs_parse() {
+        parse_without_errors(
+            r#"
+package main
+
+enum Status { Ready, Running = 2 }
+
+func worker() {}
+
+func process(x &Item, y &mut Item) void {
+    let value = &mut x
+    arena {
+        defer { worker() }
+    }
+    match value {
+    case x:
+        zag worker()
+    default:
+        external { int counter = 1; }
+    }
+}
+"#,
+        );
     }
 }

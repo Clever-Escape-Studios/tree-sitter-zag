@@ -70,6 +70,7 @@
 ; Keywords
 
 [
+  "arena"
   "break"
   "case"
   "chan"
@@ -78,6 +79,8 @@
   "default"
   "defer"
   "else"
+  "enum"
+  "external"
   "fallthrough"
   "for"
   "func"
@@ -85,7 +88,10 @@
   "if"
   "import"
   "interface"
+  "let"
   "map"
+  "match"
+  "mut"
   "package"
   "range"
   "return"

@@ -118,13 +118,19 @@ export default grammar({
     [$.call_expression, $.binary_expression],
   ],
 
-  reserved: {
-    global: ($) => [
-      "break",
-      "default",
-      "func",
-      "interface",
-      "select",
+    reserved: {
+      global: ($) => [
+        "arena",
+        "break",
+        "enum",
+        "external",
+        "default",
+        "func",
+        "interface",
+        "let",
+        "match",
+        "mut",
+        "select",
       "case",
       "defer",
       "zag",
@@ -175,6 +181,7 @@ export default grammar({
         $.import_declaration,
         $.interface_declaration,
         $.struct_declaration,
+        $.enum_declaration,
       ),
 
     package_clause: ($) => seq("package", $._package_identifier),
@@ -209,7 +216,12 @@ export default grammar({
       ),
 
     _declaration: ($) =>
-      choice($.const_declaration, $.type_declaration, $.var_declaration),
+      choice(
+        $.const_declaration,
+        $.type_declaration,
+        $.var_declaration,
+        $.let_declaration,
+      ),
 
     const_declaration: ($) =>
       seq(
@@ -235,6 +247,8 @@ export default grammar({
       ),
 
     var_declaration: ($) => seq("var", choice($.var_spec, $.var_spec_list)),
+
+    let_declaration: ($) => seq("let", choice($.var_spec, $.var_spec_list)),
 
     var_spec: ($) =>
       seq(
@@ -298,6 +312,21 @@ export default grammar({
         field("name", $._type_identifier),
         field("type_parameters", optional($.type_parameter_list)),
         $.field_declaration_list,
+      ),
+
+    enum_declaration: ($) =>
+      seq(
+        "enum",
+        field("name", $._type_identifier),
+        "{",
+        optional(seq(commaSep1($.enum_member), optional(","))),
+        "}",
+      ),
+
+    enum_member: ($) =>
+      seq(
+        field("name", $.identifier),
+        optional(seq("=", field("value", $._expression))),
       ),
 
     type_parameter_list: ($) =>
@@ -367,6 +396,7 @@ export default grammar({
         prec.dynamic(-1, $._type_identifier),
         $.generic_type,
         $.qualified_type,
+        $.reference_type,
         $.pointer_type,
         $.struct_type,
         $.interface_type,
@@ -394,6 +424,8 @@ export default grammar({
       prec.dynamic(10, seq("<", commaSep1($.type_elem), optional(","), ">")),
 
     pointer_type: ($) => prec(PREC.unary, seq("*", $._type)),
+
+    reference_type: ($) => prec(PREC.unary, seq("&", optional("mut"), $._type)),
 
     array_type: ($) =>
       prec.right(
@@ -517,8 +549,11 @@ export default grammar({
         $.return_statement,
         $.zag_statement,
         $.defer_statement,
+        $.arena_statement,
+        $.external_statement,
         $.if_statement,
         $.for_statement,
+        $.match_statement,
         $.expression_switch_statement,
         $.type_switch_statement,
         $.select_statement,
@@ -594,7 +629,14 @@ export default grammar({
 
     zag_statement: ($) => seq("zag", $._expression),
 
-    defer_statement: ($) => seq("defer", $._expression),
+    defer_statement: ($) => seq("defer", choice($._expression, $.block)),
+
+    arena_statement: ($) => seq("arena", $.block),
+
+    external_statement: ($) =>
+      seq("external", "{", optional($.external_code), "}"),
+
+    external_code: (_) => token(/[^}]*/),
 
     if_statement: ($) =>
       seq(
@@ -635,6 +677,15 @@ export default grammar({
         "switch",
         optional(seq(field("initializer", $._simple_statement), ";")),
         field("value", optional($._expression)),
+        "{",
+        repeat(choice($.expression_case, $.default_case)),
+        "}",
+      ),
+
+    match_statement: ($) =>
+      seq(
+        "match",
+        field("value", $._expression),
         "{",
         repeat(choice($.expression_case, $.default_case)),
         "}",
@@ -696,6 +747,7 @@ export default grammar({
 
     _expression: ($) =>
       choice(
+        $.mutable_borrow_expression,
         $.unary_expression,
         $.binary_expression,
         $.selector_expression,
@@ -911,6 +963,9 @@ export default grammar({
           field("operand", $._expression),
         ),
       ),
+
+    mutable_borrow_expression: ($) =>
+      prec(PREC.unary, seq("&", "mut", field("operand", $._expression))),
 
     binary_expression: ($) => {
       const table = [

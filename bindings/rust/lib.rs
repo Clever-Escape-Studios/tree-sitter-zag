@@ -81,11 +81,11 @@ enum Status { Ready, Running = 2 }
 func worker() {}
 
 func process(x &Item, y &mut Item) void {
-    let value = &mut x
+    let item_ref = &mut x
     arena {
         defer { worker() }
     }
-    match value {
+    match item_ref {
     case x:
         zag worker()
     default:
